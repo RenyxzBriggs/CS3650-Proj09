@@ -1,0 +1,132 @@
+//Author: Renzo Fabrig
+//Class: CS 3650
+//Assignment: nand2tetris Project 9
+//Due: 4-20-20
+
+class MazeGame{
+
+	field PlayerSquare player;
+	field int keyMove;
+
+	field boolean win;
+	field boolean quit;
+
+	//----------CONSTRUCTOR----------
+	constructor MazeGame new(){
+
+		do Screen.clearScreen();
+        do Output.printString("Get the Square to eat the Circle. Press 'Q' to Quit");   //Display Game Prompt
+
+		let player = PlayerSquare.new(450, 20, 24);   //Spawn player Square at the top right
+		let keyMove = 0;
+		let quit = false;
+
+        //----------Create Obstacles----------  
+
+		do Screen.drawRectangle( 0, 40, 256, 60);   //Hack Platform 256 Rows by 512 Columns
+        do Screen.drawRectangle( 0, 120, 50, 140); 
+		do Screen.drawRectangle( 100, 120, 511, 140); 
+		do Screen.drawRectangle( 0, 200, 256, 220); 
+        do Screen.drawRectangle( 300, 200, 511, 220); 
+
+        //Draw Circle
+        do Screen.drawCircle( 10, 240, 5);          //Circle at bottom left to be eaten by Square to win the maze game
+
+		return this;
+	}
+
+    //----------RUN----------
+	method void run(){
+
+		var char key;
+
+        //Program runs true till user manually quits or eats the Circle
+		while(~quit){
+
+			while(key = 0){
+
+				let key = Keyboard.keyPressed();
+				do move();
+
+				if (key = 81){ let quit = true; }          //81 = Q, Q for Quit
+		
+				if (key = 131){ let keyMove = 1; }    // 131 = Up Arrow Key
+
+				if (key = 132){ let keyMove = 2; }    // 132 = Right Arrow key
+
+				if (key = 130){ let keyMove= 3; }    // 130 = Left Arrow key
+
+				if (key = 133){ let keyMove = 4; }    // 133 = Down Arrow key
+			}
+
+			while(~(key = 0)){
+
+				let key = Keyboard.keyPressed();
+				do move();
+			}
+		}
+
+        //Quit program if user enters 'Q'
+		if(quit){
+
+		    do Screen.clearScreen();
+        	do Output.moveCursor(0, 0);
+			do Output.printString("Exiting Game...");	
+		}
+
+		return;
+	}	
+
+    //----------MOVE----------
+	method void move(){
+
+		var int x1, y1, x2, y2;
+		var int size;
+		var int speed;
+
+		let x1 = player.getX1();
+		let y1 = player.getY1();
+		let x2 = player.getX2();
+		let y2 = player.getY2();
+		let size = player.getSize();
+
+        //set the speed in ms according to wait function in the Hack library
+		let speed = 30;
+        do Sys.wait(speed);
+
+		let win = false;
+
+		if(keyMove = 1){ do player.moveUp(); }
+
+		if(keyMove = 2){ do player.moveRight(); }
+
+		if(keyMove = 3){ do player.moveLeft(); }
+
+		if(keyMove = 4){ do player.moveDown(); }
+
+        //----------FINISH LINE----------
+        //Check for finish line at the Circle
+		if (((x1 > 0) & (x1 < 15) & (y1 > 220)) | ((x2 > 0) & (x2 < 15) & (y2 > 220))){
+
+			let win = true;
+		}
+
+        //----------Game over message----------
+		if (win){
+
+			do Screen.clearScreen();
+        	do Output.moveCursor(0, 0);
+            do Output.printString("Winner! The Square has devoured the Circle! Press 'Q' to quit.");
+		}
+		return;
+	}
+
+    //----------DISPOSE----------
+	method void dispose(){
+
+		do player.dispose();
+		do Memory.deAlloc(this);
+		return;
+	}
+
+}

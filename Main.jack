@@ -1,0 +1,19 @@
+//Author: Renzo Fabrig
+//Class: CS 3650
+//Assignment: nand2tetris Project 9
+//Due: 4-20-20
+
+//Creates Game object and runs program
+
+class Main
+{
+	function void main()
+	{
+		var MazeGame game;
+		let game = MazeGame.new();
+		do game.run();
+		do game.dispose();
+
+		return;
+	}
+}

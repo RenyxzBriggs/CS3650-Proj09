@@ -1,0 +1,122 @@
+//Author: Renzo Fabrig
+//Class: CS 3650
+//Assignment: nand2tetris Project 9
+//Due: 4-20-20
+  
+
+class PlayerSquare{
+
+    field int x, y;
+    field int size;
+
+	//----------CONSTRUCTOR----------
+    constructor PlayerSquare new(int X, int Y, int SIZE){
+
+        let x = X;
+        let y = Y;
+        let size = SIZE;
+
+        do draw(x, y, size);
+
+        return this;
+    }
+
+	//----------GETTERS----------
+    method int getX1(){
+
+        return x + size;
+    }
+
+    method int getY1(){
+
+        return y + size;
+    }
+
+    method int getX2(){
+
+        return x;
+    }
+
+    method int getY2(){
+
+        return y;
+    }
+
+    method int getSize(){
+
+        return size;
+    }
+    //---------------------------
+
+	//----------DRAW----------
+    method void draw(int x, int y, int SIZE){
+
+        do Screen.drawRectangle(x, y, x + SIZE, y + SIZE);
+        return;
+    }
+
+    //----------MOVEMENTS----------
+
+    method void moveLeft(){
+
+        if(x > 1){
+
+            do Screen.setColor(false);
+            do Screen.drawRectangle((x + size) - 1, y, x + size, y + size);
+            let x = x - 1;
+            do Screen.setColor(true);
+            do Screen.drawRectangle(x, y, x + 1, y + size);
+
+        }
+        return;
+    }
+
+    method void moveRight(){
+
+        if( (x + size) < 510){  //cannot pass border of 512 sized screen
+
+            do Screen.setColor(false);
+            do Screen.drawRectangle(x, y, x + 1, y + size);
+            let x = x + 1;
+            do Screen.setColor(true);
+            do Screen.drawRectangle((x + size) - 1, y, x + size, y + size);
+        }
+        return;
+    }
+
+    method void moveUp(){
+
+        if(y > 1){
+
+            do Screen.setColor(false);
+            do Screen.drawRectangle(x, (y + size) - 1, x + size, y + size);
+            let y = y - 1;
+            do Screen.setColor(true);
+            do Screen.drawRectangle(x, y, x + size, y + 1);
+        }
+        return;
+    }
+
+    method void moveDown(){
+
+        if( (y + size) < 254){  //cannot pass border of 256 sized screen
+
+            do Screen.setColor(false);
+            do Screen.drawRectangle(x, y, x + size, y + 1);
+            let y = y + 1;
+            do Screen.setColor(true);
+            do Screen.drawRectangle(x, (y + size) - 1, x + size, y + size);
+        }
+        return;
+    }
+
+    //-----------------------------
+
+    //----------DISPOSE----------
+    method void dispose(){
+
+        do Memory.deAlloc(this);
+        return;
+    }
+
+}
